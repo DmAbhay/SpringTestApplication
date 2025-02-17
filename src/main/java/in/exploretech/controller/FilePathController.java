@@ -82,7 +82,11 @@ public class FilePathController {
         System.out.println(abhayDbUtil.fetchSpecificField("SELECT * FROM projectMaster WHERE projectId = 10001;", "projectName"));
 
         //System.out.println(redisSessionUtil.generateAuthKey());
+<<<<<<< HEAD
         redisSessionUtil.storeKey("authKey", "jai shree krishna bolo jai radhe", 30, TimeUnit.MINUTES);
+=======
+        redisSessionUtil.storeKey("authKey", "jai shree krishna bolo jai radhe", 20, TimeUnit.MINUTES);
+>>>>>>> 5feb7a3de5abb1f265d4da46c991800fe69e39f4
 
         DebugBoundary.printDebugBoundary();
         System.out.println(redisSessionUtil.getKey("authKe"));
