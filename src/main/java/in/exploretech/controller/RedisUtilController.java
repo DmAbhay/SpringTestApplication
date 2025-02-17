@@ -69,7 +69,7 @@ public class RedisUtilController {
 
     @PostMapping("/add-one-field-to-object")
     public ResponseEntity<String> addOneFieldTotheObject(@RequestParam String objectKey, @RequestParam String key) {
-        redisObjectUtil.addFieldToObject(objectKey, key, "to please krishna");
+        redisObjectUtil.addFieldToObject(objectKey, key, "Ashish");
         return ResponseEntity.ok("Field added to the object Successfully");
     }
 
