@@ -5,7 +5,7 @@ import dataman.dmbase.config.IniConfig;
 import dataman.dmbase.dbutil.DatabaseUtil;
 import dataman.dmbase.documentutil.DocumentUtil;
 import dataman.dmbase.encryptiondecryptionutil.EncryptionDecryptionUtil;
-import dataman.dmbase.redissessionutil.RedisSessionUtil;
+import dataman.dmbase.redissessionutil.RedisSimpleKeyValuePairUtil;
 import in.exploretech.config.ExternalConfig;
 import in.exploretech.util.DebugBoundary;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +68,7 @@ public class FilePathController {
     private DatabaseUtil abhayDbUtil;
 
     @Autowired
-    private RedisSessionUtil redisSessionUtil;
+    private RedisSimpleKeyValuePairUtil redisSessionUtil;
 
 
     @PostMapping("/library-test-02")
