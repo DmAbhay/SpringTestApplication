@@ -5,7 +5,7 @@ import dataman.dmbase.config.IniConfig;
 import dataman.dmbase.dbutil.DatabaseUtil;
 import dataman.dmbase.documentutil.DocumentUtil;
 import dataman.dmbase.encryptiondecryptionutil.EncryptionDecryptionUtil;
-import dataman.dmbase.redissessionutil.RedisSessionUtil;
+import dataman.dmbase.redissessionutil.RedisSimpleKeyValuePairUtil;
 import in.exploretech.config.ExternalConfig;
 import in.exploretech.util.DebugBoundary;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 public class FilePathController {
@@ -68,7 +69,7 @@ public class FilePathController {
     private DatabaseUtil abhayDbUtil;
 
     @Autowired
-    private RedisSessionUtil redisSessionUtil;
+    private RedisSimpleKeyValuePairUtil redisSessionUtil;
 
 
     @PostMapping("/library-test-02")
@@ -81,7 +82,7 @@ public class FilePathController {
         System.out.println(abhayDbUtil.fetchSpecificField("SELECT * FROM projectMaster WHERE projectId = 10001;", "projectName"));
 
         //System.out.println(redisSessionUtil.generateAuthKey());
-        redisSessionUtil.storeKey("authKey", "jai shree krishna bolo jai radhe", 20);
+        redisSessionUtil.storeKey("authKey", "jai shree krishna bolo jai radhe", 30, TimeUnit.MINUTES);
 
         DebugBoundary.printDebugBoundary();
         System.out.println(redisSessionUtil.getKey("authKe"));
