@@ -28,16 +28,16 @@ public class RedisUtilController {
                                                    @RequestParam long timeout,
                                                    @RequestBody Map<String, Object> objectData) {
         // Using seconds as the TimeUnit
-        redisObjectUtil.saveObjectAsHash(objectKey, objectData, timeout, TimeUnit.SECONDS);
-        redisObjectUtil.addFieldToHash(objectKey, "ournature", "to please krishna");
+        redisObjectUtil.saveJson(objectKey, objectData, timeout, TimeUnit.SECONDS);
+        redisObjectUtil.addFieldToObject(objectKey, "ournature", "to please krishna");
 
         Map<String, Object> map = new HashMap<>();
         map.put("name", "krishna");
         map.put("age", "20");
         map.put("gender", "male");
-        redisObjectUtil.saveObjectAsHash("mymap", map, timeout, TimeUnit.SECONDS);
+        redisObjectUtil.saveJson("mymap", map, timeout, TimeUnit.SECONDS);
 
-        redisObjectUtil.saveObjectAsHash(objectKey, objectData, timeout, TimeUnit.SECONDS);
+        redisObjectUtil.saveJson(objectKey, objectData, timeout, TimeUnit.SECONDS);
         return ResponseEntity.ok("Object saved as hash with timeout!");
     }
 
@@ -63,13 +63,13 @@ public class RedisUtilController {
 
     @PostMapping("/delete-field-from-object")
     public ResponseEntity<String> deleteSpecicFieldFromObject(@RequestParam String objectKey, @RequestParam String key) {
-        redisObjectUtil.deleteFieldFromHash(objectKey, key);
+        redisObjectUtil.deleteFieldFromObject(objectKey, key);
         return ResponseEntity.ok("Field Removed Successfully");
     }
 
     @PostMapping("/add-one-field-to-object")
     public ResponseEntity<String> addOneFieldTotheObject(@RequestParam String objectKey, @RequestParam String key) {
-        redisObjectUtil.addFieldToHash(objectKey, key, "to please krishna");
+        redisObjectUtil.addFieldToObject(objectKey, key, "to please krishna");
         return ResponseEntity.ok("Field added to the object Successfully");
     }
 

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 public class FilePathController {
@@ -81,7 +82,7 @@ public class FilePathController {
         System.out.println(abhayDbUtil.fetchSpecificField("SELECT * FROM projectMaster WHERE projectId = 10001;", "projectName"));
 
         //System.out.println(redisSessionUtil.generateAuthKey());
-        redisSessionUtil.storeKey("authKey", "jai shree krishna bolo jai radhe", 20);
+        redisSessionUtil.storeKey("authKey", "jai shree krishna bolo jai radhe", 20, TimeUnit.MINUTES);
 
         DebugBoundary.printDebugBoundary();
         System.out.println(redisSessionUtil.getKey("authKe"));
