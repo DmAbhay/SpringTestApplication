@@ -1,9 +1,12 @@
 package in.exploretech.config;
 
 import com.mongodb.client.MongoClients;
+import dataman.dmbase.config.IniConfig;
 import dataman.dmbase.dbutil.DatabaseUtil;
 import dataman.dmbase.documentutil.DocumentUtil;
+import in.exploretech.util.DebugBoundary;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,6 +16,9 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
 import org.springframework.data.mongodb.gridfs.GridFsTemplate;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 @Configuration
 public class BeanConfig {
 	
@@ -21,6 +27,11 @@ public class BeanConfig {
 
     @Autowired
     ExternalConfig externalConfig;
+
+    @Value("${configFilePath}") // Injecting VM argument
+    private String configFilePath;
+
+
 	
 	@Bean
     public String initialOps() {
@@ -35,7 +46,7 @@ public class BeanConfig {
     //Database connection config start
 
     @Bean(name = "donationTransactionDatabaseUtil")
-    public DatabaseUtil donationTransactionDatabaseUtil() {  // ✅ Corrected method signature
+    public DatabaseUtil donationTransactionDatabaseUtil() {
         DatabaseUtil dbUtil = new DatabaseUtil(
                 "javaserver",
                 "1434",
@@ -61,34 +72,46 @@ public class BeanConfig {
 
     //Database connection config end
 
-
-//    @Bean
-//    public DocumentUtil documentUtil() {
-//        // Construct MongoDB URI
-//        String mongoUri = String.format("mongodb://%s:%s@%s:%d/%s?authSource=admin",
-//                "dataman", "dataman@123", "javaserver", "27017", "blm");
-//
-//        // Create MongoDatabaseFactory
-//        MongoDatabaseFactory mongoDatabaseFactory = new SimpleMongoClientDatabaseFactory(MongoClients.create(mongoUri), "blm");
-//
-//        // Create MongoTemplate
-//        MongoTemplate mongoTemplate = new MongoTemplate(mongoDatabaseFactory);
-//
-//        // Create GridFsTemplate
-//        GridFsTemplate gridFsTemplate = new GridFsTemplate(mongoDatabaseFactory, mongoTemplate.getConverter());
-//
-//        // Return DocumentUtil with dependencies
-//        return new DocumentUtil(mongoDatabaseFactory, mongoTemplate);
-//    }
-
     @Bean
     public DocumentUtil documentUtil() {
+
+        IniConfig iniConfig = new IniConfig(configFilePath);
+
+        // Force a fresh connection
+        MongoClients.create().close(); // Close any existing connections
         // Encode '@' as '%40' in password
-        String mongoUri = String.format("mongodb://%s:%s@%s:%d/%s?authSource=admin",
-                "dataman", "dataman%40123", "javaserver", 27017, "blm");
+
+
+        String mongoDatabase = iniConfig.getProperty("mongoDatabase");
+        String mongoHost = iniConfig.getProperty("mongoHost");
+        String mongoUser = iniConfig.getProperty("mongoUser");
+        String mongoPort = iniConfig.getProperty("mongoPort");
+        String mongoPassword = iniConfig.getProperty("mongoPassword");
+
+        DebugBoundary.printDebugBoundary();
+        System.out.println(mongoPassword);
+        System.out.println(mongoDatabase);
+        System.out.println(mongoUser);
+        System.out.println(mongoHost);
+        System.out.println(mongoPort);
+        DebugBoundary.printDebugBoundary();
+
+        String encodedPassword = URLEncoder.encode(mongoPassword, StandardCharsets.UTF_8);
+
+        //String databaseName = "blm";
+
+//        String mongoUri = String.format("mongodb://%s:%s@%s:%d/%s?authSource=admin",
+//                "dataman", encodedPassword, "javaserver", 27017, mongoDatabase);
+
+        String mongoUri = String.format("mongodb://%s:%s@%s:%s/%s?authSource=admin",
+                mongoUser, encodedPassword, mongoHost, mongoPort, mongoDatabase);
+
+        DebugBoundary.printDebugBoundary();
+        System.out.println(mongoUri);
+        DebugBoundary.printDebugBoundary();
 
         // Create MongoDatabaseFactory
-        MongoDatabaseFactory mongoDatabaseFactory = new SimpleMongoClientDatabaseFactory(MongoClients.create(mongoUri), "blm");
+        MongoDatabaseFactory mongoDatabaseFactory = new SimpleMongoClientDatabaseFactory(MongoClients.create(mongoUri), mongoDatabase);
 
         // Create MongoTemplate
         MongoTemplate mongoTemplate = new MongoTemplate(mongoDatabaseFactory);
