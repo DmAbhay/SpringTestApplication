@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import dataman.dmbase.debug.Debug;
 import dataman.dmbase.encryptiondecryptionutil.EncryptionDecryptionUtil;
+import dataman.dmbase.encryptiondecryptionutil.EncryptionDecryptionUtilNew;
 import dataman.dmbase.encryptiondecryptionutil.PayloadEncryptionDecryptionUtil;
 import in.exploretech.dto.RequestDTO;
 import in.exploretech.util.JsonUtil;
@@ -29,6 +30,9 @@ public class EncryptionDecryptionController {
 
     @Autowired
     private EncryptionDecryptionUtil encryptionDecryptionUtil;
+
+    @Autowired
+    private EncryptionDecryptionUtilNew encryptionDecryptionUtilNew;
 
     @PostMapping("/encryption-request")
     public ResponseEntity<?> processUser(@RequestBody JsonNode request) {
@@ -91,7 +95,8 @@ public class EncryptionDecryptionController {
             System.out.println(payload.toPrettyString());
             Debug.printDebugBoundary("✔");
             // Use the generic method to convert to ApplicantBankDetailsDTO
-            RequestDTO requestDTO = PayloadEncryptionDecryptionUtil.decryptAndConvertToDTO(payload, encryptionDecryptionUtil, RequestDTO.class);
+            //RequestDTO requestDTO = PayloadEncryptionDecryptionUtil.decryptAndConvertToDTO(payload, encryptionDecryptionUtil, RequestDTO.class);
+            RequestDTO requestDTO = PayloadEncryptionDecryptionUtil.decryptAndConvertToDTO(payload, encryptionDecryptionUtilNew, RequestDTO.class);
             return ResponseEntity.status(HttpStatus.CREATED).body(requestDTO);
         } catch (JsonProcessingException error) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error while mapping JSON to DTO: " + error.getMessage());
@@ -111,6 +116,12 @@ public class EncryptionDecryptionController {
         response.setGender("male");
 
         // Use the utility method to encrypt response
-        return PayloadEncryptionDecryptionUtil.encryptResponse(response, encryptionDecryptionUtil);
+        //return PayloadEncryptionDecryptionUtil.encryptResponse(response, encryptionDecryptionUtil);
+        return PayloadEncryptionDecryptionUtil.encryptResponse(response, encryptionDecryptionUtilNew);
     }
+
+//    @GetMapping("/get-secret-key")
+//    public ResponseEntity<?> getSecretKey(){
+//        return ResponseEntity.ok();
+//    }
 }

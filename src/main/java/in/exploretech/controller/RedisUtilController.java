@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dataman.dmbase.redissessionutil.RedisObjectUtil;
 
+import dataman.dmbase.redissessionutil.RedisSimpleKeyValuePairUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,9 @@ public class RedisUtilController {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private RedisSimpleKeyValuePairUtil redisSimpleKeyValuePairUtil;
 
     @PostMapping("/save-hash")
     public ResponseEntity<String> saveObjectAsHash(@RequestParam String objectKey,
@@ -73,7 +77,15 @@ public class RedisUtilController {
         return ResponseEntity.ok("Field added to the object Successfully");
     }
 
+    @PostMapping("/store-simple-key-value-pair")
+    public ResponseEntity<?> addOneField(@RequestParam String key, @RequestParam String value){
+        redisSimpleKeyValuePairUtil.storeKey(key, value, 300, TimeUnit.SECONDS);
+        return ResponseEntity.ok("Your Key has been stored in Redis");
+    }
 
-
-
+    @GetMapping("/get-simple-key-value")
+    public ResponseEntity<?> getValue(@RequestParam String key){
+        String value = redisSimpleKeyValuePairUtil.getKey(key);
+        return ResponseEntity.ok(value);
+    }
 }

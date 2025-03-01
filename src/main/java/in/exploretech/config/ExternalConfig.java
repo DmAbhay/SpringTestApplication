@@ -7,7 +7,7 @@ import org.springframework.context.annotation.PropertySource;
 import lombok.Getter;
 
 @Configuration
-@PropertySource("file:${configFilePath}")
+@PropertySource("file:C:/Users/Dataman/myconfigfile/myconfig.properties")
 @Getter
 public class ExternalConfig {
 
