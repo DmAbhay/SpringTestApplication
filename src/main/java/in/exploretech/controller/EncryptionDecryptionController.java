@@ -62,7 +62,7 @@ public class EncryptionDecryptionController {
             System.out.println(result);
             HashMap<String, String> encryptedResponse = new HashMap<>();
 
-            encryptedResponse.put("data", encryptionDecryptionUtil.encrypt(result));
+            encryptedResponse.put("data", encryptionDecryptionUtilNew.encrypt(result));
             return ResponseEntity.ok(encryptedResponse);
 
         } catch (JsonProcessingException e) {
@@ -76,7 +76,7 @@ public class EncryptionDecryptionController {
     public ResponseEntity<?> decryptPayload(@RequestBody JsonNode request) throws Exception {
 
         String encryptedPayload = request.get("data").asText();
-        String decryptedPayload = encryptionDecryptionUtil.decrypt(encryptedPayload);
+        String decryptedPayload = encryptionDecryptionUtilNew.decrypt(encryptedPayload);
         // Convert the decrypted string back to a JsonNode
         try {
             JsonNode response = objectMapper.readTree(decryptedPayload);
